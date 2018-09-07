@@ -1,2 +1,3 @@
 # Identification With Handwriting
-Machine learning project that provides person identification from a dataset of hand writings
+Machine learning project written in golang
+Provides person identification from a dataset of hand writings
