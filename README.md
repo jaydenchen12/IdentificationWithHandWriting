@@ -1,4 +1,4 @@
 # Identification With Handwriting
 Machine learning project written in golang
 
-Provides person identification from a dataset of hand writings
+Provides signature identification from a dataset of signatures
