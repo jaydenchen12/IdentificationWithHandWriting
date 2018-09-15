@@ -2,7 +2,7 @@ from flask import Flask
 app = Flask(__name__)
 
 @app.route('/')
-class Tnitial(Resource): 
+class Tnitial(Resource):
     def get():
         """
         Initial contact point of the backend service
@@ -20,6 +20,13 @@ class Datasets(Resource):
     def post(datasetId, **kwargs):
         """
         Post the training dataset to the backend and object store
+        """
+        pass
+
+@app.route('/process')
+    def post(**kwargs):
+        """
+        Upload the signatures for processing
         """
         pass
 
