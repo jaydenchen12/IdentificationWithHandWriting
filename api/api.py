@@ -1,13 +1,7 @@
 from flask import Flask
+from apis import api
+
 app = Flask(__name__)
+api.init_app(app)
 
-@app.route('/')
-def hello_world():
-    return 'Hello There'
-
-@app.route('/process')
-def upload():
-    return "Submit an invoice for process"
-
-if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0')
+app.run(debug=True)

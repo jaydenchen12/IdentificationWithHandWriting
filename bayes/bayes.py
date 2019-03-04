@@ -16,31 +16,31 @@ class Bayes_Classifier:
             self.records_fake = self.load("records_fake.txt")
 
     def train_real(self):
-        im = Image.open('signature.png') # Can be many different formats.
-        data = list(im.getdata())
-        for i in range(len(data)):
-            self.records_real[i].append(data[i])
-        im2 = Image.open('signature2.png')
-        im2_data = list(im2.getdata())
-        for i in range(len(im2_data)):
-            self.records_real[i].append(im2_data[i])
+        for k in range(1,6):
+            filename = 'true' + str(k) +'.png'
+            im = Image.open(filename) # Can be many different formats.
+            im = im.convert('1')
+            data = list(im.getdata())
+            for i in range(len(data)):
+                self.records_real[i].append(data[i])
+            im.save(filename)
         self.save(self.records_real, "records_real.txt")
     def train_fake(self):
-        im = Image.open('fake1.png') # Can be many different formats.
-        data = list(im.getdata())
-        for i in range(len(data)):
-            self.records_fake[i].append(data[i])
-        im2 = Image.open('fake2.png')
-        im2_data = list(im2.getdata())
-        for i in range(len(im2_data)):
-            self.records_fake[i].append(im2_data[i])
+        for k in range(1,6):
+            filename = 'fake' + str(k) +'.png'
+            im = Image.open(filename) # Can be many different formats.
+            im = im.convert('1')
+            data = list(im.getdata())
+            for i in range(len(data)):
+                self.records_fake[i].append(data[i])
+            im.save(filename)
         self.save(self.records_fake, "records_fake.txt")
 
     def classify(self, img):
         im = Image.open(img)
         im = im.convert('1')
-        pPos = 0.5
-        pNeg = 0.5
+        pPos = 0.49
+        pNeg = 0.51
         probabilitiesPos = []
         probabilitiesNeg = []
         probabilitiesPos.append(math.log(pPos))
@@ -54,7 +54,7 @@ class Bayes_Classifier:
             # print numberPos, numberNeg
             numberPos = float(numberPos)
             numberNeg = float(numberNeg)
-            num = 868 * 268 * 2
+            num = 100 * 100
             pWordPos = numberPos / num
             pWordNeg = numberNeg / num
             condProbPos = numberPos / ( numberNeg + numberPos)
@@ -104,4 +104,13 @@ class Bayes_Classifier:
 
 if __name__ == "__main__":
     bayes = Bayes_Classifier()
-    print bayes.classify("fake4.png")
+    for i in range(1,3):
+        file = 'test' + str(i) + 'true.png'
+        print "classifying " + file + " bayes output:"
+        print bayes.classify(file)
+        print "input file was real"
+    for i in range(1,4):
+        file = 'test' + str(i) + 'fake.png'
+        print "classifying " + file + " bayes output:"
+        print bayes.classify(file)
+        print "input file was fake"
