@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MLSigAuth</title>
+    <!--JQuery dependencies-->
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <style>
+    </style>
+</head>
+<div data-role="header">
+    <h1>Welcome to MLSignatureAuth</h1>
+</div>
+<body>
+    <div data-role="content" id="content" align="center">
+
+      <p align="center">
+          Please sign the box below or upload a .png
+      </p>
+      <div align="center">
+      <canvas id="myCanvas" width="800" height="300" style="border:1px solid #000000;"></canvas>
+      </div>
+      <div class="container" align="center" style="width: 60%;">
+          <button id="resetCanvas" onclick="reset()"> Reset Signature </button>
+          <button onclick="saveAsPNG()"> Process Signature </button>
+          <input type="file" id="files" name="files[]" multiple >
+      </div>
+      <img id="imageDiv" align="center"/>
+    </div>
+</body>
+<div data-role="footer" class="footer">
+    <h1>Project By: Purav Barot, Jayden Chen, Trish Messinger, Anthony Montefiore, Dhruv Patel, Andrew Vo</h1>
+</div>
+<!--Pointing HTML to javascript running the logic for this page-->
+<script src="../controllers/signatureController.js"></script>
+</html>

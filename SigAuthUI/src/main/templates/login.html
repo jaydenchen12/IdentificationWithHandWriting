@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MLSigAuth</title>
+    <!--JQuery dependencies-->
+    <link type="text/css" rel="stylesheet"
+          href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+    </style>
+</head>
+
+<div data-role="header">
+    <h1>Welcome to MLSignatureAuth</h1>
+</div>
+
+<body>
+<!--Content Div where will will load other html templates from the backend-->
+<div data-role="content" id="content" align="center">
+    <p align="center"><b>Please Login Below</b></p>
+
+    <div class="container" align="center" style="width: 60%; align:center">
+        <b>Username:</b><input type="text" id="username" size="10"><br>
+        <b>Password:</b><input type="password" id="password"><br>
+        <b id="confirmText" style="display:none">Confirm Password:</b><input type="password" id="confirmInput" style="display:none"><br>
+        <p id="instructions" align="center" style="display:none; width: 20%;text-align: -webkit-left;"><b><u>Instructions:</u></b><br>1) Sign the box below <br>2) Click next <br> 3) Repeat 3 Times</p>
+        <div>
+            <canvas id="myCanvas" width="800" height="300" style="display:none; border:1px solid #000000;"></canvas>
+        </div>
+        <button onclick="next()" id="nextBtn" style="display:none;"> Next </button>
+        <button onclick="login()" id="loginBtn" style="display:block;"> Login </button>
+        <button onclick="createUser()" id="createBtn" style="display:none;"> Create User </button>
+        <!--<button onclick="signUp()" id="cancel" style="display:none;"> Cancel </button>-->
+        <button onclick="signUp()" id="signUp" style="display:block;"> Sign Up </button>
+    </div>
+
+    <div id="imageDiv" align="center"></div>
+</div>
+
+</body>
+<div data-role="footer" class="footer">
+    <h1>Project By: Purav Barot, Jayden Chen, Trish Messinger, Anthony Montefiore, Dhruv Patel, Andrew Vo</h1>
+</div>
+
+<!--Pointing HTML to javascript running the logic for this page-->
+<script src="../controllers/loginController.js"></script>
+<script src="../controllers/signatureController.js"></script>
+
+</html>

@@ -1,0 +1,9 @@
+
+^javascript:UnusedVariableQ"9Remove the declaration of the unused 'username' variable.(ëùú¨
+^javascript:UnusedVariable0"9Remove the declaration of the unused 'username' variable.(ëùú¨
+cjavascript:UnusedVariableR"9Remove the declaration of the unused 'password' variable.(Ù¸¢ûÿÿÿÿ
+cjavascript:UnusedVariable1"9Remove the declaration of the unused 'password' variable.(Ù¸¢ûÿÿÿÿ
+Wjavascript:S18540";Remove this useless assignment to local variable "username"(ëùú¨
+\javascript:S18541";Remove this useless assignment to local variable "password"(Ù¸¢ûÿÿÿÿ
+\javascript:S1854R";Remove this useless assignment to local variable "password"(Ù¸¢ûÿÿÿÿ
+Wjavascript:S1854Q";Remove this useless assignment to local variable "username"(ëùú¨
