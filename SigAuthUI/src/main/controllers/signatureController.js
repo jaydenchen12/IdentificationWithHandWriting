@@ -142,13 +142,13 @@ function saveAsPNG(){
     // Ajax call to hit the rest call for uploading signatures
     $.ajax({
       type: 'POST',
-      url:"https://localhost:5000/Signature/verify_signature/",
-      body: {
-        token: '',
-        image: formData,
-        user_name: ''
-      },
-      //Cross Origin Support
+      url:"https://localhost:5000/Signature/verify_signature?token=asd&username=asd",
+      enctype: 'multipart/form-data',
+      processData: false,
+      contentType: false,
+      cache: false,
+      data: formData,
+        //Cross Origin Support
       cors: true,
       headers: {
          'Access-Control-Allow-Origin': '*'
@@ -200,7 +200,7 @@ function uploadPNG(evt){
             processData: false,  // Important!
             contentType: false,
             cache: false,
-            url:"https://localhost:5000/Signature/verify_signature?password=asd&username=asd",
+            url:"https://localhost:5000/Signature/verify_signature?token=asd&username=asd",
             data: formData,
             //Cross Origin Support
             cors: true,
@@ -215,48 +215,6 @@ function uploadPNG(evt){
             }
         });
     }
-}
-
-document.getElementById('files').addEventListener('change', uploadPNG, false);
-
-function previewFile() {
-    var preview = document.querySelector('img');
-    var file    = document.querySelector('input[type=file]').files[0];
-    var reader  = new FileReader();
-
-    reader.addEventListener("load", function () {
-        preview.src = reader.result;
-    }, false);
-
-    if (file) {
-        reader.readAsDataURL(file);
-
-
-        // Read in the image file as a data URL.
-        var formData = new FormData();
-        formData.append('uploadedPNG', dataURLtoBlob(reader.result));
-        $.ajax({
-            type: "POST",
-            enctype: 'multipart/form-data',
-            processData: false,  // Important!
-            contentType: false,
-            cache: false,
-            url:"https://localhost:5000/Signature/verify_signature?password=asd&username=asd",
-            data: formData,
-            //Cross Origin Support
-            cors: true,
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            },
-            success: function (msg) {
-                alert('PNG has successfully been uploaded!');
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert('Error contacting server!');
-            }
-        });
-    }
-
 }
 
 function dataURLtoBlob(dataurl) {
@@ -300,3 +258,43 @@ function reset() {
     ctx.clearRect(0, 0,  canvas.width, canvas.height);
 }
 //  ------------------------------------------- Clear Canvas ----------------------------------------------------- //
+
+$(document).ready(function () {
+
+    $("#submitBtn").click(function (event) {
+
+        //stop submit the form, we will post it manually.
+        event.preventDefault();
+
+        var form = $('#fileUploadForm')[0];
+
+        // Create an FormData object
+        var data = new FormData(form);
+
+
+        // disabled the submit button
+        $("#submitBtn").prop("disabled", true);
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url:"https://localhost:5000/Signature/verify_signature?token=asd&user_name=asd",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (data) {
+                console.log("SUCCESS : ", data);
+                $("#submitBtn").prop("disabled", false);
+
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+                $("#submitBtn").prop("disabled", false);
+
+            }
+        });
+
+    });
+
+});
