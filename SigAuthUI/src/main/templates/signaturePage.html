@@ -23,9 +23,9 @@
       <canvas id="myCanvas" width="800" height="300" style="border:1px solid #000000;"></canvas>
       </div>
       <div class="container" align="center" style="width: 60%;">
+          <input type="file" onchange="previewFile()" id="files" name="files[]" multiple >
           <button id="resetCanvas" onclick="reset()"> Reset Signature </button>
           <button onclick="saveAsPNG()"> Process Signature </button>
-          <input type="file" id="files" name="files[]" multiple >
       </div>
       <img id="imageDiv" align="center"/>
     </div>

@@ -134,30 +134,32 @@ function saveAsPNG(){
     var imgDiv = document.getElementById("imageDiv");
     imgDiv.appendChild(newCanvas);
 
-
-    //For exporting canvas as png
     var img = canvas.toDataURL("image/png");
 
-    // Ajax call to hit the rest call for
-    // document.write('<img src="'+img+'"/>');
+    var formData = new FormData();
+    formData.append('file', dataURLtoBlob(img));
 
-    // $.ajax({
-    //   type: 'POST',
-    //   url:"http://localhost:5000/verify_signature/",
-    //   data: {
-    //       image: img
-    //   },
-    //   headers: {
-    //     'Access-Control-Allow-Origin':'*',
-    //     'Content-Type': 'application/x-www-form-urlencoded'
-    //   },
-    //   success: function(msg){
-    //       alert('PNG has successfully been uploaded!');
-    //   },
-    //   error: function(xhr, ajaxOptions, thrownError){
-    //       alert('Error contacting server!');
-    //   }
-    // });
+    // Ajax call to hit the rest call for uploading signatures
+    $.ajax({
+      type: 'POST',
+      url:"https://localhost:5000/Signature/verify_signature/",
+      body: {
+        token: '',
+        image: formData,
+        user_name: ''
+      },
+      //Cross Origin Support
+      cors: true,
+      headers: {
+         'Access-Control-Allow-Origin': '*'
+      },
+      success: function(msg){
+          alert('PNG has successfully been uploaded!');
+      },
+      error: function(xhr, ajaxOptions, thrownError){
+          alert('Error contacting server!');
+      }
+    });
 
     //Fake return message to users
     alert('PNG has successfully been uploaded!');
@@ -190,12 +192,81 @@ function uploadPNG(evt){
 
         // Read in the image file as a data URL.
         reader.readAsDataURL(f);
+        var formData = new FormData();
+        formData.append('uploadedPNG', dataURLtoBlob(reader.result));
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            processData: false,  // Important!
+            contentType: false,
+            cache: false,
+            url:"https://localhost:5000/Signature/verify_signature?password=asd&username=asd",
+            data: formData,
+            //Cross Origin Support
+            cors: true,
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+            success: function(msg){
+                alert('PNG has successfully been uploaded!');
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                alert('Error contacting server!');
+            }
+        });
     }
 }
 
 document.getElementById('files').addEventListener('change', uploadPNG, false);
 
+function previewFile() {
+    var preview = document.querySelector('img');
+    var file    = document.querySelector('input[type=file]').files[0];
+    var reader  = new FileReader();
 
+    reader.addEventListener("load", function () {
+        preview.src = reader.result;
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
+
+
+        // Read in the image file as a data URL.
+        var formData = new FormData();
+        formData.append('uploadedPNG', dataURLtoBlob(reader.result));
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            processData: false,  // Important!
+            contentType: false,
+            cache: false,
+            url:"https://localhost:5000/Signature/verify_signature?password=asd&username=asd",
+            data: formData,
+            //Cross Origin Support
+            cors: true,
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+            success: function (msg) {
+                alert('PNG has successfully been uploaded!');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('Error contacting server!');
+            }
+        });
+    }
+
+}
+
+function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+}
 
 function cloneCanvas(oldCanvas) {
 
@@ -229,4 +300,3 @@ function reset() {
     ctx.clearRect(0, 0,  canvas.width, canvas.height);
 }
 //  ------------------------------------------- Clear Canvas ----------------------------------------------------- //
-

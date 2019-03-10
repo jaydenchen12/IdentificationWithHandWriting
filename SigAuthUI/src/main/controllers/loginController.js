@@ -8,31 +8,33 @@ function login(){
     //Base64 encoding of the password before sending to the server
     var encodedPass = btoa(password);
 
-    var json = {username:username , password:encodedPass};
+    // var json = {username:username , password:encodedPass};
+    // var userInfo = {username:username , password:password};
+    // var json = userInfo.serializeJSON();
+    // console.log(json);
 
-    console.log(json);
-
-    // $.ajax({
-    //     type: "GET",
-    //     url: "http://localhost:5000/login_tenant",
-    //     body: json,
-    //     dataType: "json",
-    //     headers: {
-    //         'Access-Control-Allow-Origin':'*',
-    //         'Content-Type': 'application/x-www-form-urlencoded'
-    //     },
-    //     success: function (msg) {
-    //         console.log(msg);
-    //         sessionStorage.setItem("authorization", true);
-    //         sessionStorage.setItem("user", username);
-    //         window.location = "../templates/signaturePage.html";
-    //     },
-    //     error: function (jgXHR, textStatus, errorThrown) {
-    //         console.log(errorThrown);
-    //         alert(textStatus);
-    //     }
-    // });
-    window.location = "../templates/signaturePage.html";
+    $.ajax({
+        type: "POST",
+        url: 'http://localhost:5000/Login/login_tenant?password=' + password + '&username=' + username,
+        contentType: 'application/json',
+        accept: 'application/json',
+        //Cross Origin Support
+        cors: true ,
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        },
+        success: function (msg) {
+            console.log(msg);
+            sessionStorage.setItem("authorization", true);
+            sessionStorage.setItem("user", username);
+            window.location = "../templates/signaturePage.html";
+        },
+        error: function (jgXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+            alert(textStatus);
+        }
+    });
+    // window.location = "../templates/signaturePage.html";
 }
 
 
@@ -45,21 +47,26 @@ function createUser(){
     var encodedPass = btoa(password);
     if(password === confirmInput) {
         //Rest call for creating new user
-        // var json = {username: username, password: encodedPass};
-        // $.ajax({
-        //     type: "GET",
-        //     url: "http://localhost:8080/createUser",
-        //     data: json,
-        //     dataType: "html",
-        //     success: function (msg) {
-        //         signUp();
-        //         alert("User Successfully Created! You May Now Login.");
-        //     },
-        //     error: function (jgXHR, textStatus, errorThrown) {
-        //         console.log(errorThrown);
-        //         alert(textStatus);
-        //     }
-        // });
+        var json = {username: username, password: encodedPass};
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/createUser",
+            data: json,
+            dataType: "html",
+            //Cross Origin Support
+            cors: true ,
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+            success: function (msg) {
+                signUp();
+                alert("User Successfully Created! You May Now Login.");
+            },
+            error: function (jgXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                alert(textStatus);
+            }
+        });
         alert("User Successfully Created");
 
         //Faking the creation of user by storing the user information on the session storage
