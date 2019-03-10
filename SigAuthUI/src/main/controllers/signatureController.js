@@ -142,7 +142,7 @@ function saveAsPNG(){
     // Ajax call to hit the rest call for uploading signatures
     $.ajax({
       type: 'POST',
-      url:"https://localhost:5000/Signature/verify_signature?token=asd&username=asd",
+      url:"http://localhost:5000/Signature/verify_signature/?token=asd&username=asd",
       enctype: 'multipart/form-data',
       processData: false,
       contentType: false,
@@ -200,7 +200,7 @@ function uploadPNG(evt){
             processData: false,  // Important!
             contentType: false,
             cache: false,
-            url:"https://localhost:5000/Signature/verify_signature?token=asd&username=asd",
+            url:"http://localhost:5000/Signature/verify_signature/?token=asd&username=asd",
             data: formData,
             //Cross Origin Support
             cors: true,
@@ -278,7 +278,7 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
-            url:"https://localhost:5000/Signature/verify_signature?token=asd&user_name=asd",
+            url:"http://localhost:5000/Signature/verify_signature/?token=asd&user_name=asd",
             data: data,
             processData: false,
             contentType: false,
