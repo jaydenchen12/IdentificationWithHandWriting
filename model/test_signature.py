@@ -4,7 +4,7 @@ from keras.models import load_model
 from keras.preprocessing import image
 
 model = load_model('trained_model.h5')
-
+model._make_predict_function()
 
 def test_image(sig_img):
     test_signature = image.load_img(sig_img, target_size=(150, 220))
@@ -26,3 +26,4 @@ def test_image(sig_img):
 
 # for test in test_case:
 #     print(test_image(test))
+ 

@@ -22,14 +22,17 @@ upload_parser.add_argument('user_name', required=True)
 class Signature(Resource):
     def post(self):
       #  uploaded_file = args['file']  # This is FileStorage instance
-        uploaded_file = request.files['file']
+
+        uploaded_file = request.files['files']
+        
         # print('files:', uploaded_file.read())
         # uploaded_file.save('./signature.png')
        # with open('signature.png', 'wb') as f:
        #     f.write(uploaded_file['file'])
         #url = do_something_with_file(uploaded_file)
-        prediction = test_signature.test_image(uploaded_file.read())
-        return {'prediction': prediction }, 201
+        # image = uploaded_file.read()
+        prediction = test_signature.test_image(uploaded_file)
+        return prediction, 201
 
 
 get_status_parser = api.parser()
