@@ -1,17 +1,13 @@
 //Setting user's info on to window session
 sessionStorage.setItem("authorization", false);
 
+
+/**
+ * Function for logging in an existing user and setting the user information on the session storage
+ */
 function login(){
     var username = $("#username").get(0).value.toString();
     var password = $("#password").get(0).value.toString();
-
-    //Base64 encoding of the password before sending to the server
-    var encodedPass = btoa(password);
-
-    // var json = {username:username , password:encodedPass};
-    // var userInfo = {username:username , password:password};
-    // var json = userInfo.serializeJSON();
-    // console.log(json);
 
     $.ajax({
         type: "POST",
@@ -34,25 +30,21 @@ function login(){
             alert(textStatus);
         }
     });
-    // window.location = "../templates/signaturePage.html";
 }
 
-
+/**
+ * function for creating a new user after they have recorded their signatures
+ */
 function createUser(){
     var username = $("#username").get(0).value.toString();
     var password = $("#password").get(0).value.toString();
     var confirmInput = $("#confirmInput").get(0).value.toString();
 
-    //Base64 encoding of the password before sending to the server
-    var encodedPass = btoa(password);
     if(password === confirmInput) {
         //Rest call for creating new user
-        var json = {username: username, password: encodedPass};
         $.ajax({
-            type: "GET",
-            url: "http://localhost:8080/createUser",
-            data: json,
-            dataType: "html",
+            type: "POST",
+            url: "http://localhost:8080/create_tenant?password=" + password + '&username=' + username,
             //Cross Origin Support
             cors: true ,
             headers: {
@@ -72,12 +64,15 @@ function createUser(){
         //Faking the creation of user by storing the user information on the session storage
         sessionStorage.setItem("User", username);
 
-        window.location = "login.html"
+        window.location = "../templates/signaturePage.html"
     } else {
         alert("Passwords do not match!")
     }
 }
 
+/**
+ * Function for toggling the buttons and input fields needed to create a new user
+ */
 function signUp() {
     var confirmInput = document.getElementById("confirmInput");
     var confirmText = document.getElementById("confirmText");
@@ -94,11 +89,13 @@ function signUp() {
     toggleElement(canvas);
     toggleElement(nextBtn);
     toggleElement(instructions);
-    // toggleElement(cancel);
     toggleElement(signUp);
 }
 
-//Function for showing and hiding elements using the display style
+/**
+ * Function for showing and hiding elements using the display style
+ * @param x
+ */
 function toggleElement(x){
     if (x.style.display === "none") {
         x.style.display = "block";
@@ -108,18 +105,18 @@ function toggleElement(x){
 }
 
 
+
+/**
+ * Function for keeping track of the number of signatures a new user has created
+ */
 var numOfSign = 0;
 function next() {
 
     //Making a copy of the canvas to save in an array
     var canvas = document.getElementById("myCanvas");
-    var newCanvas = cloneCanvas(canvas);
-    var imgDiv = document.getElementById("imageDiv");
 
     //For exporting canvas as png
     var img = canvas.toDataURL("image/png");
-    imgDiv.appendChild(newCanvas);
-    // document.write('<img src="'+img+'"/>');
 
     //Resetting canvas
     var ctx = canvas.getContext('2d');
@@ -133,7 +130,6 @@ function next() {
         var nextBtn = document.getElementById("nextBtn");
         var createBtn = document.getElementById("createBtn");
         var instructions = document.getElementById("instructions");
-        // var confirm = document.getElementById("confirm");
         var loginBtn = document.getElementById("loginBtn");
 
         toggleElement(instructions);
@@ -141,7 +137,6 @@ function next() {
         toggleElement(nextBtn);
         toggleElement(loginBtn);
         toggleElement(canvas);
-        // toggleElement(confirm);
 
         createUser();
     }

@@ -1,12 +1,21 @@
-//  ------------------------------------------- Save as image ---------------------------------------------------- //
 
+//Init for placing the user name in the header
+// var user = sessionStorage.getItem("user");
+// if (user === undefined || user === null){
+//     user = "Test User"
+// }
+// var welcome = document.getElementById("welcome");
+// var newWelcome = document.createElement("h1");
+// newWelcome.innerHTML("Welcome," + user);
+// welcome.parentNode.replaceChild(mySpan, welcome);
+
+
+//  ------------------------------------------- Save as image ---------------------------------------------------- //
+/**
+ * Function for saving the canvas signature as a PNG and upload to backend
+ */
 function saveAsPNG(){
     var canvas = document.getElementById("myCanvas");
-
-    // var newCanvas = cloneCanvas(canvas);
-    // var imgDiv = document.getElementById("imageDiv");
-    // imgDiv.appendChild(newCanvas);
-
     var img = canvas.toDataURL("image/png");
 
     var formData = new FormData(img);
@@ -21,7 +30,7 @@ function saveAsPNG(){
       contentType: false,
       cache: false,
       data: formData,
-        //Cross Origin Support
+      //Cross Origin Support
       cors: true,
       headers: {
          'Access-Control-Allow-Origin': '*'
@@ -33,12 +42,13 @@ function saveAsPNG(){
           alert('Error contacting server!');
       }
     });
-
-    //Fake return message to users
-    alert('PNG has successfully been uploaded!');
-
 }
 
+/**
+ * function to conver the canvas data URL to a blob that will be added to a multipart file
+ * @param dataurl
+ * @returns {Blob}
+ */
 function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -48,22 +58,22 @@ function dataURLtoBlob(dataurl) {
     return new Blob([u8arr], {type:mime});
 }
 
+
+/**
+ * Function for when the submit button is clicked for uploading a .png
+ */
 $(document).ready(function () {
 
     $("#submitBtn").click(function (event) {
 
-        //stop submit the form, we will post it manually.
+        //Stop the submit functionality so it can be done manually below
         event.preventDefault();
 
+        //Grabbing the form element from the template
         var form = $('#fileUploadForm')[0];
 
-        // Create an FormData object
+        // Create an FormData object to be sent as a multipart file
         var data = new FormData(form);
-
-
-        // disabled the submit button
-        $("#submitBtn").prop("disabled", true);
-
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
@@ -74,36 +84,16 @@ $(document).ready(function () {
             cache: false,
             success: function (data) {
                 console.log("SUCCESS : ", data);
-                $("#submitBtn").prop("disabled", false);
-
+                alert(data.toString());
             },
             error: function (e) {
                 console.log("ERROR : ", e);
-                $("#submitBtn").prop("disabled", false);
-
             }
         });
 
     });
 
 });
-
-function cloneCanvas(oldCanvas) {
-
-    //create a new canvas
-    var newCanvas = document.createElement('canvas');
-    var newContext = newCanvas.getContext('2d');
-
-    //set dimensions
-    newCanvas.width = oldCanvas.width;
-    newCanvas.height = oldCanvas.height;
-
-    //apply the old canvas to the new one
-    newContext.drawImage(oldCanvas, 0, 0);
-
-    //return the new canvas
-    return newCanvas;
-}
 
 //----------------------------------------^^^^ Save as image ^^^^-----------------------------------------------------//
 
@@ -113,6 +103,9 @@ function cloneCanvas(oldCanvas) {
 var canvas = document.getElementById("myCanvas");
 var context = document.getElementById("myCanvas").getContext("2d");
 
+/**
+ * The following functions are event listeners used for the drawing on the canvas
+ */
 $('#myCanvas').mousedown(function(e){
     var mouseX = e.pageX - this.offsetLeft;
     var mouseY = e.pageY - this.offsetTop;
@@ -246,6 +239,3 @@ document.body.addEventListener("touchmove", function (e) {
 
 
 //  ------------------------------------------^^^^ Canvas ^^^^--------------------------------------------------------//
-
-
-
