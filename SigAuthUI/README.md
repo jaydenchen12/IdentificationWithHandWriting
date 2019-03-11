@@ -13,7 +13,7 @@ npm
 .
 ├── dist                    # Compiled files (Not implemented yet)
 ├── node_modules            # Installed node modules that are listed in the package.json
-├── src                     # Source files (alternatively `lib` or `app`)
+├── src                     # Source files
 ├   ├── main                # Where the .js and .HTML files live
 ├       ├── controllers     # Javascript files that the .HTML files use
 ├       ├── templates       # .HTML files that display information to the users
