@@ -1,4 +1,5 @@
 from flask_restplus import Namespace, Resource, fields
+from flask import request
 from werkzeug.datastructures import FileStorage
 
 api = Namespace('Signature', description='Process')
@@ -14,8 +15,10 @@ upload_parser.add_argument('user_name', required=True)
 @api.expect(upload_parser)
 class Signature(Resource):
     def post(self):
-        uploaded_file = args['file']  # This is FileStorage instance
-        url = do_something_with_file(uploaded_file)
+      #  uploaded_file = args['file']  # This is FileStorage instance
+        uploaded_file = request.files
+        print('files:', uploaded_file)
+        #url = do_something_with_file(uploaded_file)
         return {'record_id': '1234testing'}, 201
 
 
