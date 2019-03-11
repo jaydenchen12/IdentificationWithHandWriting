@@ -20,9 +20,9 @@ def test_image(sig_img):
     return prediction
 
 
-test_case = ['../MLSigAuth/img/test_images/test_sig1.png',
-             '../MLSigAuth/img/test_images/test_sig2.png',
-             '../MLSigAuth/img/test_images/test_sig3.png']
+# test_case = ['../MLSigAuth/img/test_images/test_sig1.png',
+#              '../MLSigAuth/img/test_images/test_sig2.png',
+#              '../MLSigAuth/img/test_images/test_sig3.png']
 
-for test in test_case:
-    print(test_image(test))
+# for test in test_case:
+#     print(test_image(test))

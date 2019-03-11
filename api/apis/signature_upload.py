@@ -3,7 +3,7 @@ from flask import request
 from werkzeug.datastructures import FileStorage
 
 import sys
-sys.path.insert(0, '../model/test_signature.py')
+sys.path.append('../model/')
 
 
 import test_signature
@@ -23,12 +23,13 @@ class Signature(Resource):
     def post(self):
       #  uploaded_file = args['file']  # This is FileStorage instance
         uploaded_file = request.files['file']
-        print('files:', type(uploaded_file))
-        uploaded_file.save('./signature.png')
+        # print('files:', uploaded_file.read())
+        # uploaded_file.save('./signature.png')
        # with open('signature.png', 'wb') as f:
        #     f.write(uploaded_file['file'])
         #url = do_something_with_file(uploaded_file)
-        return {'record_id': '1234testing'}, 201
+        prediction = test_signature.test_image(uploaded_file.read())
+        return {'prediction': prediction }, 201
 
 
 get_status_parser = api.parser()
