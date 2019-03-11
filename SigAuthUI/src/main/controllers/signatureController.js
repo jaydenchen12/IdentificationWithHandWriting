@@ -19,7 +19,7 @@ function saveAsPNG(){
     var img = canvas.toDataURL("image/png");
 
     var formData = new FormData(img);
-    formData.append('file', dataURLtoBlob(img));
+    formData.append('files', dataURLtoBlob(img));
 
     // Ajax call to hit the rest call for uploading signatures
     $.ajax({
