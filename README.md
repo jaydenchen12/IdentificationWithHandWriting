@@ -8,3 +8,5 @@ Flask
 Tensorflow
 MongoDB backend
 Objectstore
+
+Make sure to go through README from /SigAuthUI and /api
