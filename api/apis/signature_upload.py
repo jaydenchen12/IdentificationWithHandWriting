@@ -1,7 +1,7 @@
 from flask_restplus import Namespace, Resource, fields
 from flask import request
 from werkzeug.datastructures import FileStorage
-
+from pymongo import MongoClient
 import sys
 sys.path.append('../model/')
 
