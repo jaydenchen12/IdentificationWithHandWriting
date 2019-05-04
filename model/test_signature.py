@@ -2,7 +2,7 @@ import numpy as np
 from keras.models import load_model
 from keras.preprocessing import image
 
-model = load_model('../model/trained_model_cnn.h5')
+model = load_model('./trained_model_cnn.h5')
 
 
 def test_image(sig_img):
@@ -19,8 +19,8 @@ def test_image(sig_img):
     return prediction
 
 
-test_case = ['../model/img/test_images/test_sig1.png',
-             '../model/img/test_images/test_sig2.png',
-             '../model/img/test_images/test_sig3.png']
+test_case = ['./img/test_images/test_sig1.png',
+             './img/test_images/test_sig2.png',
+             './img/test_images/test_sig3.png']
 for test in test_case:
     print(test_image(test))
