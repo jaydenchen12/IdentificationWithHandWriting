@@ -3,10 +3,8 @@ from flask import request
 from werkzeug.datastructures import FileStorage
 
 import sys
-sys.path.append('../model/')
 
 
-import test_signature
 
 api = Namespace('Signature', description='Process')
 
@@ -31,7 +29,7 @@ class Signature(Resource):
        #     f.write(uploaded_file['file'])
         #url = do_something_with_file(uploaded_file)
         # image = uploaded_file.read()
-        prediction = test_signature.test_image(uploaded_file)
+#        prediction = test_signature.test_image(uploaded_file)
         return prediction, 201
 
 
