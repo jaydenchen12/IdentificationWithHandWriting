@@ -2,6 +2,7 @@ from flask_restplus import Namespace, Resource, fields
 from flask import request
 from werkzeug.datastructures import FileStorage
 
+from . import producer
 import sys
 
 
@@ -22,15 +23,9 @@ class Signature(Resource):
       #  uploaded_file = args['file']  # This is FileStorage instance
 
         uploaded_file = request.files['files']
-        
-        # print('files:', uploaded_file.read())
-        # uploaded_file.save('./signature.png')
-       # with open('signature.png', 'wb') as f:
-       #     f.write(uploaded_file['file'])
-        #url = do_something_with_file(uploaded_file)
-        # image = uploaded_file.read()
-#        prediction = test_signature.test_image(uploaded_file)
-        return prediction, 201
+        print("received")  
+        producer.produce_msg("42069")    
+        return "Image ID is: 42069", 201
 
 
 get_status_parser = api.parser()

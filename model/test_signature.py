@@ -18,9 +18,9 @@ def test_image(sig_img):
         prediction = [0, output[0][0]]
     return prediction
 
-
-test_case = ['./img/test_images/test_sig1.png',
-             './img/test_images/test_sig2.png',
-             './img/test_images/test_sig3.png']
-for test in test_case:
-    print(test_image(test))
+def test():
+	test_case = ['./img/test_images/test_sig1.png',
+		     './img/test_images/test_sig2.png',
+		     './img/test_images/test_sig3.png']
+	for test in test_case:
+	    print(test_image(test))
