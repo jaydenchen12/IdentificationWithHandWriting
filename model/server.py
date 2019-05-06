@@ -4,7 +4,7 @@ import time
 import test_signature
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host="172.18.0.2"))
+    pika.ConnectionParameters(host="rabbit"))
 channel = connection.channel()
 
 channel.queue_declare(queue='task_queue', durable=True)

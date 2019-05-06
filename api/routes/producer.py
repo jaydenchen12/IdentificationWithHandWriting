@@ -2,7 +2,7 @@ import pika
 
 def produce_msg(image_id):
     
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.18.0.2'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbit'))
     channel = connection.channel()
     exchange_name = ''
     routing_key = 'task_queue'
