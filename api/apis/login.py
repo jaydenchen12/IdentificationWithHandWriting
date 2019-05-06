@@ -3,6 +3,7 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 from flask import Flask
 from pymongo import MongoClient
+import datetime
 client = MongoClient('localhost', 27017)
 db = client['sig_ml']
 UPLOAD_FOLDER = '/objectstore'
@@ -44,6 +45,7 @@ class Signup(Resource):
         result = db.users.insert_one(
             {'username':  request.args.get('username'),
              'password': request.args.get('password'),
+             'create_time': datetime.datetime.utcnow(),
              'ground_truths': secure_file_names})
 
         return "User Created!", 201
