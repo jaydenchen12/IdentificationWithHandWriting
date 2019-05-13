@@ -1,5 +1,5 @@
 from flask_restplus import Namespace, Resource, fields
-from flask import request
+from flask import request, Flask
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
@@ -12,8 +12,6 @@ UPLOAD_FOLDER = '/objectstore'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-import test_signature
 
 api = Namespace('Signature', description='Process')
 
