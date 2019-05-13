@@ -6,7 +6,6 @@ from flask_cors import CORS
 # from pymongo.binary import Binary
 import pymongo
 import datetime
-UPLOAD_FOLDER = '/objectstore'
 
 app = Flask(__name__)
 mongoCilent = pymongo.MongoClient("mongodb://mongodb:27017/")
