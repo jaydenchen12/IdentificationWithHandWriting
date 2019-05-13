@@ -11,19 +11,21 @@ Objectstore
 
 To run the pipeline do the following in order
 
-`cd  /rabbitmq`
-`chmod 755 start.sh`
-`./start.sh`
+```bash
+cd  /rabbitmq
+chmod 755 start.sh
+./start.sh
 
-`cd ../mongo`
-`chmod 755 build-run.sh`
-`./build-run.sh`
+cd ../mongo
+chmod 755 build-run.sh
+./build-run.sh
 
-`cd ../model`
-`chmod 755 *`
-`./start.sh`
+cd ../model
+chmod 755 *
+./start.sh
 
-`cd ../api`
-`chmod 755 *`
-`./build.sh`
-`./start.sh`
+cd ../api
+chmod 755 *
+./build.sh
+./start.sh
+```
