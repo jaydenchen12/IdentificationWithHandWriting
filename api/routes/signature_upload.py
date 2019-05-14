@@ -6,8 +6,10 @@ from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 import sys
 import datetime
+import producer
+
 sys.path.append('../model/')
-mongoCilent = pymongo.MongoClient("mongodb://mongodb:27017/")
+mongoCilent = pymongo.MongoClient("mongodb://mongodocker:27017/")
 mongo = mongoCilent["sigml"]
 
 app = Flask(__name__)
@@ -17,19 +19,14 @@ api = Namespace('Signature', description='Process')
 upload_parser = api.parser()
 # Input arguments includes multiple file input
 upload_parser.add_argument('file', location='files',
-                           type=FileStorage, required=True, action='append')
+                           type=FileStorage, required=True)
 upload_parser.add_argument('token', required=True)
 upload_parser.add_argument('user_name', required=True)
 @api.route('/verify_signature/')
 @api.expect(upload_parser)
 class Signature(Resource):
     def post(self):
-        files = request.files['files']
-        secure_file_names = []
-        if files:
-            file = files[0]
-            secure_file_name = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_file_name))
+        file = request.files['files'].read()
         record_id = mongo.db.jobs.InsertOneResult(
             {'user':  request.args.get('username'),
              'status': 'in_progress',
@@ -37,9 +34,8 @@ class Signature(Resource):
              'last_modified': datetime.datetime.utcnow(),
              'confidence': 'None',
              'authorized': 'None',
-             'signature': secure_file_name})
-        test_signature.test_image(uploaded_file)
-        
+             'signature_image': file})        
+        producer.produce_msg(record_id)   
         return record_id, 201
 
 

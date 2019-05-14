@@ -13,7 +13,7 @@ print(' [*] Waiting for messages. To exit press CTRL+C')
 
 def callback(ch, method, properties, body):
     print(" [OK] Received %r" % body)
-    test_signature.test()
+    test_signature.test(body)
     print(" [OK] Done")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
