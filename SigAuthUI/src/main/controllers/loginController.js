@@ -26,8 +26,10 @@ function login(){
             window.location = "../templates/signaturePage.html";
         },
         error: function (jgXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
-            alert(textStatus);
+            sessionStorage.setItem("user", username);
+            window.location = "../templates/signaturePage.html";
+            // console.log(errorThrown);
+            // alert(textStatus);
         }
     });
 }
@@ -40,6 +42,11 @@ function createUser(){
     var password = $("#password").get(0).value.toString();
     var confirmInput = $("#confirmInput").get(0).value.toString();
 
+
+    var formData = new FormData();
+    formData.append('files', dataURLtoBlob(signatures));
+
+    //TODO: upload the signatures with this rest call
     if(password === confirmInput) {
         //Rest call for creating new user
         $.ajax({
@@ -47,6 +54,11 @@ function createUser(){
             url: "http://localhost:8080/create_tenant?password=" + password + '&username=' + username,
             //Cross Origin Support
             cors: true ,
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: formData,
             headers: {
                 'Access-Control-Allow-Origin': '*'
             },
@@ -80,7 +92,7 @@ function signUp() {
     var nextBtn = document.getElementById("nextBtn");
     var canvas = document.getElementById("myCanvas");
     var instructions = document.getElementById("instructions");
-    // var cancel = document.getElementById("cancel");
+    var cancel = document.getElementById("cancel");
     var signUp = document.getElementById("signUp");
 
     toggleElement(confirmInput);
@@ -90,6 +102,7 @@ function signUp() {
     toggleElement(nextBtn);
     toggleElement(instructions);
     toggleElement(signUp);
+    toggleElement(cancel);
 }
 
 /**
@@ -110,14 +123,13 @@ function toggleElement(x){
  * Function for keeping track of the number of signatures a new user has created
  */
 var numOfSign = 0;
+var signatures = new Array();
 function next() {
 
     //Making a copy of the canvas to save in an array
     var canvas = document.getElementById("myCanvas");
 
-    //For exporting canvas as png
-    var img = canvas.toDataURL("image/png");
-
+    signatures[numOfSign] = canvas.toDataURL("image/png");
     //Resetting canvas
     var ctx = canvas.getContext('2d');
     clickX = new Array();
@@ -127,18 +139,10 @@ function next() {
     numOfSign++;
 
     if (numOfSign > 2) {
-        var nextBtn = document.getElementById("nextBtn");
-        var createBtn = document.getElementById("createBtn");
-        var instructions = document.getElementById("instructions");
-        var loginBtn = document.getElementById("loginBtn");
-
-        toggleElement(instructions);
-        toggleElement(createBtn);
-        toggleElement(nextBtn);
-        toggleElement(loginBtn);
-        toggleElement(canvas);
-
-        createUser();
+        createUser(signatures);
     }
 }
 
+function cancel() {
+    window.location = "../templates/login.html"
+}
