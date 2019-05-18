@@ -11,6 +11,7 @@
 
 
 //  ------------------------------------------- Save as image ---------------------------------------------------- //
+
 /**
  * Function for saving the canvas signature as a PNG and upload to backend
  */
@@ -18,7 +19,7 @@ function saveAsPNG(){
     var canvas = document.getElementById("myCanvas");
     var img = canvas.toDataURL("image/png");
 
-    var formData = new FormData(img);
+    var formData = new FormData();
     formData.append('files', dataURLtoBlob(img));
 
     // Ajax call to hit the rest call for uploading signatures
@@ -45,7 +46,7 @@ function saveAsPNG(){
 }
 
 /**
- * function to conver the canvas data URL to a blob that will be added to a multipart file
+ * function to convert the canvas data URL to a blob that will be added to a multipart file
  * @param dataurl
  * @returns {Blob}
  */
@@ -82,6 +83,11 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             cache: false,
+            //Cross Origin Support
+            cors: true,
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
             success: function (data) {
                 console.log("SUCCESS : ", data);
                 alert(data.toString());
