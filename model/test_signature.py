@@ -31,9 +31,8 @@ def test(signature_id):
     img = Image.open(io.BytesIO(image_binary))
     img.resize(target_image_size)
 	results = test_image(img)
-    mongo.db.jobs.update_one({'_id':  signature_id}, {
-                             'status': 'complete',
-                             'last_modified': datetime.datetime.utcnow(),
-                             'confidence': results[1],
-                             'authorized': results[0],
-                            })
+    mongo.db.jobs.update_one({'_id':  signature_id}, {'status': 'complete',
+        'last_modified': datetime.datetime.utcnow(),
+        'confidence': results[1],
+        'authorized': results[0],
+    })

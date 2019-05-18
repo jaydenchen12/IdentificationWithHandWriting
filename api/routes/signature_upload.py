@@ -3,13 +3,13 @@ from flask_restplus import Namespace, Resource, fields
 from flask import request, Flask
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
-from pymongo import MongoClient
+import pymongo
 import sys
 import datetime
-import producer
+from . import producer
 
 sys.path.append('../model/')
-mongoCilent = pymongo.MongoClient("mongodb://mongodocker:27017/")
+mongoCilent = pymongo.MongoClient("mongodb://mongodb:27017/")
 mongo = mongoCilent["sigml"]
 
 app = Flask(__name__)
