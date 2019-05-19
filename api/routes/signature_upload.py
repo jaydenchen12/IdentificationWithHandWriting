@@ -9,7 +9,7 @@ import datetime
 from . import producer
 
 sys.path.append('../model/')
-mongoCilent = pymongo.MongoClient("mongodb://mongodb:27017/")
+mongoCilent = pymongo.MongoClient("mongodb://mongodocker:27017/")
 mongo = mongoCilent["sigml"]
 
 app = Flask(__name__)
@@ -27,7 +27,7 @@ upload_parser.add_argument('user_name', required=True)
 class Signature(Resource):
     def post(self):
         file = request.files['files'].read()
-        record_id = mongo.db.jobs.InsertOneResult(
+        record_id = mongo.db.jobs.insert(
             {'user':  request.args.get('username'),
              'status': 'in_progress',
              'upload_time': datetime.datetime.utcnow(),
