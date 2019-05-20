@@ -30,7 +30,7 @@ def test(signature_id):
     # binary to PIL Image and resized
     img = Image.open(io.BytesIO(image_binary))
     img.resize(target_image_size)
-	results = test_image(img)
+    results = test_image(img)
     mongo.db.jobs.update_one({'_id':  signature_id}, {'status': 'complete',
         'last_modified': datetime.datetime.utcnow(),
         'confidence': results[1],

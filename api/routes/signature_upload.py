@@ -10,7 +10,7 @@ from . import producer
 from bson.objectid import ObjectId
 
 sys.path.append('../model/')
-mongoCilent = pymongo.MongoClient("mongodb://mongodb:27017/")
+mongoCilent = pymongo.MongoClient("mongodb://mongodocker:27017/")
 mongo = mongoCilent["sigml"]
 
 app = Flask(__name__)
