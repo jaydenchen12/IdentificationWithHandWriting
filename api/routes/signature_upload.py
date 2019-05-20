@@ -7,6 +7,7 @@ import pymongo
 import sys
 import datetime
 from . import producer
+from bson.objectid import ObjectId
 
 sys.path.append('../model/')
 mongoCilent = pymongo.MongoClient("mongodb://mongodb:27017/")
@@ -27,7 +28,7 @@ upload_parser.add_argument('user_name', required=True)
 class Signature(Resource):
     def post(self):
         file = request.files['files'].read()
-        record_id = mongo.db.jobs.InsertOneResult(
+        record = mongo.db.jobs.insert_one(
             {'user':  request.args.get('username'),
              'status': 'in_progress',
              'upload_time': datetime.datetime.utcnow(),
@@ -35,7 +36,7 @@ class Signature(Resource):
              'confidence': 'None',
              'authorized': 'None',
              'signature_image': file})        
-        producer.produce_msg(record_id)   
+        producer.produce_msg(record.inserted_id)   
         return record_id, 201
 
 
@@ -45,7 +46,7 @@ get_status_parser.add_argument('record_id', required=True)
 @api.expect(get_status_parser)
 class Process(Resource):
     def get(self):
-        record = mongo.db.jobs.find_one({'_id':  request.args.get('record_id')})
+        record = mongo.db.jobs.find_one({'_id':  ObjectId(request.args.get('record_id'))})
         if record['status'] == 'completed':
             return {'record_id': record['_id'],
                     'status': record['status'],

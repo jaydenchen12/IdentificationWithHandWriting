@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker create network skynet
+docker network create skynet
 
 docker rm rabbit
 
