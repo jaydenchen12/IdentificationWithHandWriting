@@ -1,0 +1,26 @@
+version: '3'
+services:
+    rabbit:
+        image: "rabbitmq:latest"
+        container_name: rabbit
+        ports:
+            - "5672:5672"
+    mongo:
+        image: "mongo:latest"
+        container_name: mongodocker
+        ports:
+            - "27017:27017"
+    ml-worker:
+        build: ./model
+        depends_on:
+            - rabbit
+            - mongo
+        restart: on-failure
+    ml-api:
+        build: ./api
+        depends_on:
+            - rabbit
+            - mongo
+            - ml-worker
+        ports:
+            - "5000:5000"
