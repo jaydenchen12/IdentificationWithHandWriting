@@ -27,7 +27,7 @@ upload_parser.add_argument('user_name', required=True)
 @api.expect(upload_parser)
 class Signature(Resource):
     def post(self):
-        file = request.files['files'].read()
+        file = request.files['file'].read()
         record = mongo.db.jobs.insert_one(
             {'user':  request.args.get('username'),
              'status': 'in_progress',
@@ -35,8 +35,9 @@ class Signature(Resource):
              'last_modified': datetime.datetime.utcnow(),
              'confidence': 'None',
              'authorized': 'None',
-             'signature_image': file})        
-        producer.produce_msg(record.inserted_id)   
+             'signature_image': file})
+        print(str(record.inserted_id), flush=True)     
+        producer.produce_msg(str(record.inserted_id))   
         return record_id, 201
 
 
