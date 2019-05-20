@@ -38,7 +38,7 @@ class Signature(Resource):
              'signature_image': file})
         print(str(record.inserted_id), flush=True)     
         producer.produce_msg(str(record.inserted_id))   
-        return record_id, 201
+        return str(record.inserted_id), 201
 
 
 get_status_parser = api.parser()
@@ -48,6 +48,7 @@ get_status_parser.add_argument('record_id', required=True)
 class Process(Resource):
     def get(self):
         record = mongo.db.jobs.find_one({'_id':  ObjectId(request.args.get('record_id'))})
+        print(record, flush=True)
         if record['status'] == 'completed':
             return {'record_id': record['_id'],
                     'status': record['status'],

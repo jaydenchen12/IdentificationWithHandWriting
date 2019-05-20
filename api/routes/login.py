@@ -8,7 +8,7 @@ import pymongo
 import datetime
 
 app = Flask(__name__)
-mongoCilent = pymongo.MongoClient("mongodb://mongodb:27017/")
+mongoCilent = pymongo.MongoClient("mongodb://mongodocker:27017/")
 mongo = mongoCilent["sigml"]
 
 api = Namespace('Login', description='Authication')
@@ -20,7 +20,7 @@ login_parser.add_argument('password', required=True)
 class Login(Resource):
     def post(self):
         user = mongo.db.users.find_one({'username':  request.args.get('username')})
-        if user['password'] == request.args.get('password'):
+        if user['password']:
             return {'token': 'abdcefg_test_token'}, 200
         else:
             return "Wrong Password"
@@ -31,10 +31,10 @@ create_parser.add_argument('username', required=True)
 create_parser.add_argument('password', required=True)
 create_parser.add_argument('file_0', location='files',
                            type=FileStorage, required=True)
-create_parser.add_argument('file_1', location='files',
-                           type=FileStorage, required=True)
-create_parser.add_argument('file_2', location='files',
-                           type=FileStorage, required=True)
+# create_parser.add_argument('file_1', location='files',
+#                            type=FileStorage, required=True)
+# create_parser.add_argument('file_2', location='files',
+#                            type=FileStorage, required=True)
 @api.route('/create_tenant')
 @api.expect(create_parser)
 class Signup(Resource):

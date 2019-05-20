@@ -10,7 +10,7 @@ from bson.objectid import ObjectId
 mongoCilent = pymongo.MongoClient("mongodb://mongodocker:27017/")
 mongo = mongoCilent["sigml"]
 model = load_model('./trained_model_cnn.h5')
-target_image_size = (150, 220)
+target_image_size = (220, 150)
 
 def test_image(img):
     test_signature = image.img_to_array(img)
@@ -25,13 +25,14 @@ def test_image(img):
     return prediction
 
 def test(signature_id):
-    mongo_id = ObjectId(signature_id)
+    b = signature_id.decode()
+    mongo_id = ObjectId(b)
     signature = mongo.db.jobs.find_one({'_id':  mongo_id})
     #image is stored as binary in the database
     image_binary = signature['signature_image']
     # binary to PIL Image and resized
     img = Image.open(io.BytesIO(image_binary))
-    img.resize(target_image_size)
+    img = img.resize(target_image_size, Image.ANTIALIAS)
     results = test_image(img)
     mongo.db.jobs.update_one({'_id':  mongo_id}, {'status': 'complete',
         'last_modified': datetime.datetime.utcnow(),
