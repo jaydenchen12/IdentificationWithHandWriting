@@ -21,12 +21,11 @@ def test_image(img):
     if output[0][0] >= 0.5:
         prediction = ["authorized", output[0][0]]
     else:
-        prediction = ["not aurthoized", output[0][0]]
+        prediction = ["not authorized", output[0][0]]
     return prediction
 
 def test(signature_id):
-    b = signature_id.decode()
-    mongo_id = ObjectId(b)
+    mongo_id = ObjectId(signature_id)
     signature = mongo.db.jobs.find_one({'_id':  mongo_id})
     #image is stored as binary in the database
     image_binary = signature['signature_image']
@@ -34,7 +33,8 @@ def test(signature_id):
     img = Image.open(io.BytesIO(image_binary))
     img = img.resize(target_image_size, Image.ANTIALIAS)
     results = test_image(img)
-    mongo.db.jobs.update_one({'_id':  mongo_id}, {'status': 'complete',
+    print("RESULTS: %r Type of: %r ", results, type(results[1]), flush=True)
+    mongo.db.jobs.replace_one({'_id':  mongo_id}, {'status': 'complete',
         'last_modified': datetime.datetime.utcnow(),
         'confidence': results[1],
         'authorized': results[0],

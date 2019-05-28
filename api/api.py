@@ -6,4 +6,6 @@ app = Flask(__name__)
 cors = CORS(app)
 api.init_app(app)
 
+
+print("TESTING:::::::", flush=True)
 app.run(host='0.0.0.0', debug=True)

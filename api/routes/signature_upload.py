@@ -16,7 +16,6 @@ mongo = mongoCilent["sigml"]
 app = Flask(__name__)
 api = Namespace('Signature', description='Process')
 
-
 upload_parser = api.parser()
 # Input arguments includes multiple file input
 upload_parser.add_argument('file', location='files',
