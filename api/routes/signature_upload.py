@@ -18,7 +18,7 @@ api = Namespace('Signature', description='Process')
 
 upload_parser = api.parser()
 # Input arguments includes multiple file input
-upload_parser.add_argument('file', location='files',
+upload_parser.add_argument('files', location='files',
                            type=FileStorage, required=True)
 upload_parser.add_argument('token', required=True)
 upload_parser.add_argument('user_name', required=True)
@@ -26,7 +26,7 @@ upload_parser.add_argument('user_name', required=True)
 @api.expect(upload_parser)
 class Signature(Resource):
     def post(self):
-        file = request.files['file'].read()
+        file = request.files['files'].read()
         record = mongo.db.jobs.insert_one(
             {'user':  request.args.get('username'),
              'status': 'in_progress',

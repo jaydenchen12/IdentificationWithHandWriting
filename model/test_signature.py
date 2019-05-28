@@ -30,7 +30,7 @@ def test(signature_id):
     #image is stored as binary in the database
     image_binary = signature['signature_image']
     # binary to PIL Image and resized
-    img = Image.open(io.BytesIO(image_binary))
+    img = Image.open(io.BytesIO(image_binary)).convert("RGB")
     img = img.resize(target_image_size, Image.ANTIALIAS)
     results = test_image(img)
     print("RESULTS: %r Type of: %r ", results, type(results[1]), flush=True)
