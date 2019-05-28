@@ -34,8 +34,10 @@ def test(signature_id):
     img = img.resize(target_image_size, Image.ANTIALIAS)
     results = test_image(img)
     print("RESULTS: %r Type of: %r ", results, type(results[1]), flush=True)
-    mongo.db.jobs.replace_one({'_id':  mongo_id}, {'status': 'complete',
+    replaced = mongo.db.jobs.replace_one({'_id':  mongo_id}, {'status': 'complete',
         'last_modified': datetime.datetime.utcnow(),
-        'confidence': results[1],
+        'confidence': results[1].item(),
         'authorized': results[0],
     })
+    
+

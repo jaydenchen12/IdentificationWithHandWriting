@@ -15,7 +15,7 @@ services:
         depends_on:
             - rabbit
             - mongo
-        restart: on-failure:3
+        restart: on-failure:2
         volumes:
             - ./model:/model
     ml-api:
