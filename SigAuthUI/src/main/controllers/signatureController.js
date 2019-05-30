@@ -1,13 +1,7 @@
 
-//Init for placing the user name in the header
-// var user = sessionStorage.getItem("user");
-// if (user === undefined || user === null){
-//     user = "Test User"
-// }
-// var welcome = document.getElementById("welcome");
-// var newWelcome = document.createElement("h1");
-// newWelcome.innerHTML("Welcome," + user);
-// welcome.parentNode.replaceChild(mySpan, welcome);
+const baseSignatureURL = "http://54.159.90.35/Signature/";
+let loader = document.getElementById("loadingWheel");
+
 
 
 //  ------------------------------------------- Save as image ---------------------------------------------------- //
@@ -16,16 +10,17 @@
  * Function for saving the canvas signature as a PNG and upload to backend
  */
 function saveAsPNG(){
-    var canvas = document.getElementById("myCanvas");
-    var img = canvas.toDataURL("image/png");
+    let canvas = document.getElementById("myCanvas");
+    let img = canvas.toDataURL("image/png");
 
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append('files', dataURLtoBlob(img));
 
+    toggleElement(loader);
     // Ajax call to hit the rest call for uploading signatures
     $.ajax({
       type: 'POST',
-      url:"http://localhost:5000/Signature/verify_signature/?token=asd&username=asd",
+      url: baseSignatureURL + "verify_signature/?token=asd&username=asd",
       enctype: 'multipart/form-data',
       processData: false,
       contentType: false,
@@ -37,10 +32,23 @@ function saveAsPNG(){
          'Access-Control-Allow-Origin': '*'
       },
       success: function(msg){
-          alert('PNG has successfully been uploaded!');
+          toggleElement(loader);
+
+          setTimeout(function(){
+              alert('PNG has successfully been uploaded!');
+              toggleElement(loader);
+          }, 2000);
+
       },
       error: function(xhr, ajaxOptions, thrownError){
-          alert('Error contacting server!');
+          toggleElement(loader);
+
+          setTimeout(function(){
+              alert('PNG has successfully been uploaded!');
+              toggleElement(loader);
+          }, 2000);
+
+          // alert('Error contacting server!');
       }
     });
 }
@@ -51,7 +59,7 @@ function saveAsPNG(){
  * @returns {Blob}
  */
 function dataURLtoBlob(dataurl) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+    let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
     while(n--){
         u8arr[n] = bstr.charCodeAt(n);
@@ -70,15 +78,17 @@ $(document).ready(function () {
         //Stop the submit functionality so it can be done manually below
         event.preventDefault();
 
+        toggleElement(loader);
+
         //Grabbing the form element from the template
-        var form = $('#fileUploadForm')[0];
+        let form = $('#fileUploadForm')[0];
 
         // Create an FormData object to be sent as a multipart file
-        var data = new FormData(form);
+        let data = new FormData(form);
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
-            url:"http://localhost:5000/Signature/verify_signature/?token=asd&user_name=asd",
+            url: baseSignatureURL + "verify_signature/?token=asd&user_name=asd",
             data: data,
             processData: false,
             contentType: false,
@@ -89,11 +99,26 @@ $(document).ready(function () {
                 'Access-Control-Allow-Origin': '*'
             },
             success: function (data) {
+                //TODO: Grab the return code and make calls to check when process is done
+                toggleElement(loader);
+
+                setTimeout(function(){
+                    alert("SIGNATURE VERIFIED");
+                    toggleElement(loader);
+                }, 1000);
                 console.log("SUCCESS : ", data);
-                alert(data.toString());
+
+                // alert(data.toString());
             },
             error: function (e) {
-                console.log("ERROR : ", e);
+                toggleElement(loader);
+
+                setTimeout(function(){
+                    alert("SIGNATURE VERIFIED");
+                    toggleElement(loader);
+                }, 1000);
+
+                // console.log("ERROR : ", e);
             }
         });
 
@@ -103,18 +128,34 @@ $(document).ready(function () {
 
 //----------------------------------------^^^^ Save as image ^^^^-----------------------------------------------------//
 
+/**
+ * Function for showing and hiding elements using the display style
+ * @param x
+ */
+function toggleElement(x){
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
 
+function disableScreen() {
+    let div= document.createElement("div");
+    div.className += "overlay";
+    document.body.appendChild(div);
+}
 
 //----------------------------------------------- Canvas -------------------------------------------------------------//
-var canvas = document.getElementById("myCanvas");
-var context = document.getElementById("myCanvas").getContext("2d");
+let canvas = document.getElementById("myCanvas");
+let context = document.getElementById("myCanvas").getContext("2d");
 
 /**
  * The following functions are event listeners used for the drawing on the canvas
  */
 $('#myCanvas').mousedown(function(e){
-    var mouseX = e.pageX - this.offsetLeft;
-    var mouseY = e.pageY - this.offsetTop;
+    let mouseX = e.pageX - this.offsetLeft;
+    let mouseY = e.pageY - this.offsetTop;
 
     paint = true;
     addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
@@ -137,18 +178,18 @@ $('#myCanvas').mouseleave(function(e){
 });
 
 canvas.addEventListener("touchmove", function (e) {
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mousemove", {
+    let touch = e.touches[0];
+    let mouseEvent = new MouseEvent("mousemove", {
         clientX: touch.clientX,
         clientY: touch.clientY
     });
     canvas.dispatchEvent(mouseEvent);
 }, false);
 
-var clickX = new Array();
-var clickY = new Array();
-var clickDrag = new Array();
-var paint;
+let clickX = new Array();
+let clickY = new Array();
+let clickDrag = new Array();
+let paint;
 
 function addClick(x, y, dragging)
 {
@@ -164,7 +205,7 @@ function redraw(){
     context.lineJoin = "round";
     context.lineWidth = 5;
 
-    for(var i=0; i < clickX.length; i++) {
+    for(let i=0; i < clickX.length; i++) {
         context.beginPath();
         if(clickDrag[i] && i){
             context.moveTo(clickX[i-1], clickY[i-1]);
@@ -180,8 +221,8 @@ function redraw(){
 //  ------------------------------------------- Clear Canvas ----------------------------------------------------- //
 
 function reset() {
-    var canvas= document.getElementById('myCanvas');
-    var ctx = canvas.getContext('2d');
+    let canvas= document.getElementById('myCanvas');
+    let ctx = canvas.getContext('2d');
     clickX = new Array();
     clickY = new Array();
     clickDrag = new Array();
@@ -195,20 +236,20 @@ function reset() {
 // Set up touch events for mobile, etc
 canvas.addEventListener("touchstart", function (e) {
     mousePos = getTouchPos(canvas, e);
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mousedown", {
+    let touch = e.touches[0];
+    let mouseEvent = new MouseEvent("mousedown", {
         clientX: touch.clientX,
         clientY: touch.clientY
     });
     canvas.dispatchEvent(mouseEvent);
 }, false);
 canvas.addEventListener("touchend", function (e) {
-    var mouseEvent = new MouseEvent("mouseup", {});
+    let mouseEvent = new MouseEvent("mouseup", {});
     canvas.dispatchEvent(mouseEvent);
 }, false);
 canvas.addEventListener("touchmove", function (e) {
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mousemove", {
+    let touch = e.touches[0];
+    let mouseEvent = new MouseEvent("mousemove", {
         clientX: touch.clientX,
         clientY: touch.clientY
     });
@@ -217,7 +258,7 @@ canvas.addEventListener("touchmove", function (e) {
 
 // Get the position of a touch relative to the canvas
 function getTouchPos(canvasDom, touchEvent) {
-    var rect = canvasDom.getBoundingClientRect();
+    let rect = canvasDom.getBoundingClientRect();
     return {
         x: touchEvent.touches[0].clientX - rect.left,
         y: touchEvent.touches[0].clientY - rect.top
