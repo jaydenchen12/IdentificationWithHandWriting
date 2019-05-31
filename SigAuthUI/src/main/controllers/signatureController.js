@@ -1,57 +1,135 @@
-
+//Base URL to Signature Services
 const baseSignatureURL = "http://54.159.90.35/Signature/";
+
+//Loading Wheel
 let loader = document.getElementById("loadingWheel");
 
+//User Information
+let user = sessionStorage.getItem("user");
+let token = sessionStorage.getItem("token");
 
+//Canvas Elements
+let canvas = document.getElementById("myCanvas");
+let context = document.getElementById("myCanvas").getContext("2d");
 
+//Creating Greeting
+if(user != null){
+    let para = document.createElement("p");
+
+    para.id = "userWelcome";
+    para.alignContent = "center";
+    para.textContent = "Hello, " + user + ".";
+
+    let element = document.getElementById("content");
+    let child = document.getElementById("Instructions");
+    element.insertBefore(para,child);
+}
 //  ------------------------------------------- Save as image ---------------------------------------------------- //
 
 /**
  * Function for saving the canvas signature as a PNG and upload to backend
  */
-function saveAsPNG(){
-    let canvas = document.getElementById("myCanvas");
-    let img = canvas.toDataURL("image/png");
+function saveAsPNG(uploadedPNG){
 
-    let formData = new FormData();
-    formData.append('files', dataURLtoBlob(img));
+    let data;
 
-    toggleElement(loader);
+    if(uploadedPNG != null){
+        data = uploadedPNG;
+    } else {
+        let canvas = document.getElementById("myCanvas");
+        let img = canvas.toDataURL("image/png");
+
+        data = new FormData();
+        data.append('files', dataURLtoBlob(img));
+    }
+
+
+    toggleElement(loader, true);
     // Ajax call to hit the rest call for uploading signatures
     $.ajax({
       type: 'POST',
-      url: baseSignatureURL + "verify_signature/?token=asd&username=asd",
+      url: baseSignatureURL + "verify_signature/?token=" + token + "&username="+ user,
       enctype: 'multipart/form-data',
       processData: false,
       contentType: false,
       cache: false,
-      data: formData,
+      data: data,
       //Cross Origin Support
       cors: true,
       headers: {
          'Access-Control-Allow-Origin': '*'
       },
       success: function(msg){
-          toggleElement(loader);
+          toggleElement(loader, true);
+          toggleDisableScreen();
 
           setTimeout(function(){
-              alert('PNG has successfully been uploaded!');
-              toggleElement(loader);
+              toggleElement(loader, false);
+              toggleDisableScreen();
+              getRecordStatus(msg);
           }, 2000);
 
       },
-      error: function(xhr, ajaxOptions, thrownError){
-          toggleElement(loader);
+      error: function(e){
+          toggleElement(loader, true);
+          toggleDisableScreen();
 
           setTimeout(function(){
-              alert('PNG has successfully been uploaded!');
-              toggleElement(loader);
+              toggleElement(loader, false);
+              toggleDisableScreen();
+              alert('Error while processing signature!');
+              console.log("error:", e);
           }, 2000);
 
-          // alert('Error contacting server!');
       }
     });
 }
+
+/**
+ * Function for when the submit button is clicked for uploading a .png
+ */
+$(document).ready(function () {
+
+    $("#submitBtn").click(function (event) {
+
+        //Stop the submit functionality so it can be done manually below
+        event.preventDefault();
+
+        //Grabbing the form element from the template
+        let form = $('#fileUploadForm')[0];
+
+        // Create an FormData object to be sent as a multipart file
+        let data = new FormData(form);
+        saveAsPNG(data);
+    });
+
+});
+
+//----------------------------------------^^^^ Save as image ^^^^-----------------------------------------------------//
+
+
+
+function getRecordStatus(recordID){
+
+    $.ajax({
+        type: "GET",
+        url: baseSignatureURL + "check_status/?record_id=" + recordID,
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        },
+        success: function (data) {
+            if(data.status === "complete"){
+                alert("You have been successfully: " + data.authorized.toUpperCase() + ".\nWith a confidence level of: " + data.confidence.toPrecision(5));
+            }
+            console.log("SUCCESS : ", data);
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        }
+    });
+
+}
+
 
 /**
  * function to convert the canvas data URL to a blob that will be added to a multipart file
@@ -67,88 +145,35 @@ function dataURLtoBlob(dataurl) {
     return new Blob([u8arr], {type:mime});
 }
 
-
-/**
- * Function for when the submit button is clicked for uploading a .png
- */
-$(document).ready(function () {
-
-    $("#submitBtn").click(function (event) {
-
-        //Stop the submit functionality so it can be done manually below
-        event.preventDefault();
-
-        toggleElement(loader);
-
-        //Grabbing the form element from the template
-        let form = $('#fileUploadForm')[0];
-
-        // Create an FormData object to be sent as a multipart file
-        let data = new FormData(form);
-        $.ajax({
-            type: "POST",
-            enctype: 'multipart/form-data',
-            url: baseSignatureURL + "verify_signature/?token=asd&user_name=asd",
-            data: data,
-            processData: false,
-            contentType: false,
-            cache: false,
-            //Cross Origin Support
-            cors: true,
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            },
-            success: function (data) {
-                //TODO: Grab the return code and make calls to check when process is done
-                toggleElement(loader);
-
-                setTimeout(function(){
-                    alert("SIGNATURE VERIFIED");
-                    toggleElement(loader);
-                }, 1000);
-                console.log("SUCCESS : ", data);
-
-                // alert(data.toString());
-            },
-            error: function (e) {
-                toggleElement(loader);
-
-                setTimeout(function(){
-                    alert("SIGNATURE VERIFIED");
-                    toggleElement(loader);
-                }, 1000);
-
-                // console.log("ERROR : ", e);
-            }
-        });
-
-    });
-
-});
-
-//----------------------------------------^^^^ Save as image ^^^^-----------------------------------------------------//
-
 /**
  * Function for showing and hiding elements using the display style
  * @param x
+ * @param onOff
  */
-function toggleElement(x){
-    if (x.style.display === "none") {
+function toggleElement(x , onOff){
+    if(onOff) {
         x.style.display = "block";
     } else {
         x.style.display = "none";
     }
 }
 
-function disableScreen() {
-    let div= document.createElement("div");
-    div.className += "overlay";
-    document.body.appendChild(div);
+
+
+function toggleDisableScreen() {
+    let overLay = document.getElementById("overLay");
+
+    if(overLay != null){
+        overLay.remove();
+    } else {
+        let div= document.createElement("div");
+        div.id = "overLay";
+        div.className += "overlay";
+        document.body.appendChild(div);
+    }
 }
 
 //----------------------------------------------- Canvas -------------------------------------------------------------//
-let canvas = document.getElementById("myCanvas");
-let context = document.getElementById("myCanvas").getContext("2d");
 
 /**
  * The following functions are event listeners used for the drawing on the canvas
