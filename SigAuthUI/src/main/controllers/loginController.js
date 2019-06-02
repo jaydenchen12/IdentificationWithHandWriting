@@ -183,7 +183,7 @@ function next() {
     // if (numOfSign === 1) {
     //     sig2 = signature;
     // }
-    if (numOfSign > 2) {
+    if (numOfSign > 1) {
         // sig3 = signature;
         // let formData = new FormData();
         // formData.append('files', sig1);
