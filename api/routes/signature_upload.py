@@ -48,6 +48,8 @@ class Process(Resource):
     def get(self):
         record = mongo.db.jobs.find_one({'_id':  ObjectId(request.args.get('record_id'))})
         print(record, flush=True)
+        if record is None:
+            return {'status' : 'This job does has not been uploaded'}, 204
         if record['status'] == 'complete':
             return {'record_id': str(record['_id']),
                     'status': record['status'],

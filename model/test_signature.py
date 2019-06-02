@@ -9,7 +9,7 @@ from bson.objectid import ObjectId
 
 mongoCilent = pymongo.MongoClient("mongodb://mongodocker:27017/")
 mongo = mongoCilent["sigml"]
-model = load_model('./trained_model_cnn.h5')
+model = load_model('./sig_CNN_model.h5')
 target_image_size = (220, 150)
 
 def test_image(img):

@@ -1,64 +1,89 @@
+//Base URL to Signature Services
+const baseSignatureURL = "http://54.159.90.35/Signature/";
 
-//Init for placing the user name in the header
-// var user = sessionStorage.getItem("user");
-// if (user === undefined || user === null){
-//     user = "Test User"
-// }
-// var welcome = document.getElementById("welcome");
-// var newWelcome = document.createElement("h1");
-// newWelcome.innerHTML("Welcome," + user);
-// welcome.parentNode.replaceChild(mySpan, welcome);
+//Loading Wheel
+let loader = document.getElementById("loadingWheel");
 
+//User Information
+let user = sessionStorage.getItem("user");
+let token = sessionStorage.getItem("token");
 
+//Canvas Elements
+let canvas = document.getElementById("myCanvas");
+let context = document.getElementById("myCanvas").getContext("2d");
+
+//Creating Greeting
+if(user != null){
+    let para = document.createElement("p");
+
+    para.id = "userWelcome";
+    para.alignContent = "center";
+    para.textContent = "Hello, " + user + ".";
+
+    let element = document.getElementById("content");
+    let child = document.getElementById("Instructions");
+    element.insertBefore(para,child);
+}
 //  ------------------------------------------- Save as image ---------------------------------------------------- //
 
 /**
  * Function for saving the canvas signature as a PNG and upload to backend
  */
-function saveAsPNG(){
-    var canvas = document.getElementById("myCanvas");
-    var img = canvas.toDataURL("image/png");
+function saveAsPNG(uploadedPNG){
 
-    var formData = new FormData();
-    formData.append('files', dataURLtoBlob(img));
+    let data;
 
+    if(uploadedPNG != null){
+        data = uploadedPNG;
+    } else {
+        let canvas = document.getElementById("myCanvas");
+        let img = canvas.toDataURL("image/png");
+
+        data = new FormData();
+        data.append('files', dataURLtoBlob(img));
+    }
+
+
+    toggleElement(loader, true);
     // Ajax call to hit the rest call for uploading signatures
     $.ajax({
       type: 'POST',
-      url:"http://localhost:5000/Signature/verify_signature/?token=asd&username=asd",
+      url: baseSignatureURL + "verify_signature/?token=" + token + "&username="+ user,
       enctype: 'multipart/form-data',
       processData: false,
       contentType: false,
       cache: false,
-      data: formData,
+      data: data,
       //Cross Origin Support
       cors: true,
       headers: {
          'Access-Control-Allow-Origin': '*'
       },
       success: function(msg){
-          alert('PNG has successfully been uploaded!');
+          toggleElement(loader, true);
+          toggleDisableScreen();
+
+          setTimeout(function(){
+              toggleElement(loader, false);
+              toggleDisableScreen();
+              getRecordStatus(msg);
+          }, 2000);
+
       },
-      error: function(xhr, ajaxOptions, thrownError){
-          alert('Error contacting server!');
+      error: function(e){
+          toggleElement(loader, true);
+          toggleDisableScreen();
+
+          setTimeout(function(){
+              toggleElement(loader, false);
+              toggleDisableScreen();
+              alert('Error while processing signature!');
+              console.log("error:", e);
+          }, 2000);
+
       }
     });
 }
-
-/**
- * function to convert the canvas data URL to a blob that will be added to a multipart file
- * @param dataurl
- * @returns {Blob}
- */
-function dataURLtoBlob(dataurl) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new Blob([u8arr], {type:mime});
-}
-
 
 /**
  * Function for when the submit button is clicked for uploading a .png
@@ -71,32 +96,11 @@ $(document).ready(function () {
         event.preventDefault();
 
         //Grabbing the form element from the template
-        var form = $('#fileUploadForm')[0];
+        let form = $('#fileUploadForm')[0];
 
         // Create an FormData object to be sent as a multipart file
-        var data = new FormData(form);
-        $.ajax({
-            type: "POST",
-            enctype: 'multipart/form-data',
-            url:"http://localhost:5000/Signature/verify_signature/?token=asd&user_name=asd",
-            data: data,
-            processData: false,
-            contentType: false,
-            cache: false,
-            //Cross Origin Support
-            cors: true,
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            },
-            success: function (data) {
-                console.log("SUCCESS : ", data);
-                alert(data.toString());
-            },
-            error: function (e) {
-                console.log("ERROR : ", e);
-            }
-        });
-
+        let data = new FormData(form);
+        saveAsPNG(data);
     });
 
 });
@@ -105,16 +109,78 @@ $(document).ready(function () {
 
 
 
+function getRecordStatus(recordID){
+
+    $.ajax({
+        type: "GET",
+        url: baseSignatureURL + "check_status/?record_id=" + recordID,
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        },
+        success: function (data) {
+            if(data.status === "complete"){
+                alert("You have been successfully: " + data.authorized.toUpperCase() + ".\nWith a confidence level of: " + data.confidence.toPrecision(5));
+            }
+            console.log("SUCCESS : ", data);
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        }
+    });
+
+}
+
+
+/**
+ * function to convert the canvas data URL to a blob that will be added to a multipart file
+ * @param dataurl
+ * @returns {Blob}
+ */
+function dataURLtoBlob(dataurl) {
+    let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+}
+
+/**
+ * Function for showing and hiding elements using the display style
+ * @param x
+ * @param onOff
+ */
+function toggleElement(x , onOff){
+    if(onOff) {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
+
+
+function toggleDisableScreen() {
+    let overLay = document.getElementById("overLay");
+
+    if(overLay != null){
+        overLay.remove();
+    } else {
+        let div= document.createElement("div");
+        div.id = "overLay";
+        div.className += "overlay";
+        document.body.appendChild(div);
+    }
+}
+
 //----------------------------------------------- Canvas -------------------------------------------------------------//
-var canvas = document.getElementById("myCanvas");
-var context = document.getElementById("myCanvas").getContext("2d");
 
 /**
  * The following functions are event listeners used for the drawing on the canvas
  */
 $('#myCanvas').mousedown(function(e){
-    var mouseX = e.pageX - this.offsetLeft;
-    var mouseY = e.pageY - this.offsetTop;
+    let mouseX = e.pageX - this.offsetLeft;
+    let mouseY = e.pageY - this.offsetTop;
 
     paint = true;
     addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
@@ -137,18 +203,18 @@ $('#myCanvas').mouseleave(function(e){
 });
 
 canvas.addEventListener("touchmove", function (e) {
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mousemove", {
+    let touch = e.touches[0];
+    let mouseEvent = new MouseEvent("mousemove", {
         clientX: touch.clientX,
         clientY: touch.clientY
     });
     canvas.dispatchEvent(mouseEvent);
 }, false);
 
-var clickX = new Array();
-var clickY = new Array();
-var clickDrag = new Array();
-var paint;
+let clickX = new Array();
+let clickY = new Array();
+let clickDrag = new Array();
+let paint;
 
 function addClick(x, y, dragging)
 {
@@ -164,7 +230,7 @@ function redraw(){
     context.lineJoin = "round";
     context.lineWidth = 5;
 
-    for(var i=0; i < clickX.length; i++) {
+    for(let i=0; i < clickX.length; i++) {
         context.beginPath();
         if(clickDrag[i] && i){
             context.moveTo(clickX[i-1], clickY[i-1]);
@@ -180,8 +246,8 @@ function redraw(){
 //  ------------------------------------------- Clear Canvas ----------------------------------------------------- //
 
 function reset() {
-    var canvas= document.getElementById('myCanvas');
-    var ctx = canvas.getContext('2d');
+    let canvas= document.getElementById('myCanvas');
+    let ctx = canvas.getContext('2d');
     clickX = new Array();
     clickY = new Array();
     clickDrag = new Array();
@@ -195,20 +261,20 @@ function reset() {
 // Set up touch events for mobile, etc
 canvas.addEventListener("touchstart", function (e) {
     mousePos = getTouchPos(canvas, e);
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mousedown", {
+    let touch = e.touches[0];
+    let mouseEvent = new MouseEvent("mousedown", {
         clientX: touch.clientX,
         clientY: touch.clientY
     });
     canvas.dispatchEvent(mouseEvent);
 }, false);
 canvas.addEventListener("touchend", function (e) {
-    var mouseEvent = new MouseEvent("mouseup", {});
+    let mouseEvent = new MouseEvent("mouseup", {});
     canvas.dispatchEvent(mouseEvent);
 }, false);
 canvas.addEventListener("touchmove", function (e) {
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mousemove", {
+    let touch = e.touches[0];
+    let mouseEvent = new MouseEvent("mousemove", {
         clientX: touch.clientX,
         clientY: touch.clientY
     });
@@ -217,7 +283,7 @@ canvas.addEventListener("touchmove", function (e) {
 
 // Get the position of a touch relative to the canvas
 function getTouchPos(canvasDom, touchEvent) {
-    var rect = canvasDom.getBoundingClientRect();
+    let rect = canvasDom.getBoundingClientRect();
     return {
         x: touchEvent.touches[0].clientX - rect.left,
         y: touchEvent.touches[0].clientY - rect.top
