@@ -15,7 +15,7 @@ To run the pipeline do the following:
 docker-compose up
 ```
 ### Installing Project on EC2
-
+```bash
 # First we need to chmod 400 out public key
 $path = ".\MLSigBackend.pem"
 # Reset to remove explict permissions
@@ -73,5 +73,5 @@ docker run --rm -it -p 80:5000 api
 ##Closeing containers
 docker-compose down
 --volume (Full teardown)
-
+```
 
