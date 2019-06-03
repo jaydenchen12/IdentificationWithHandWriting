@@ -123,4 +123,7 @@ If you are interested in timing, I used the simple `time` utility from my Unix s
 time node upload.js img2
 ```
 
+### Front-End Tests
+   
+We have unit tests for the logic of the front end js files. These can be founf in *SigAuthUI/src/test*
     
