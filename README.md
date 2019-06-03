@@ -53,7 +53,7 @@ apt-get install git-core
 sudo apt-get update
 
 sudo apt-get install \
-    apt-transport-https \
+    apt-transport-https \#!/Login/post_login
     ca-certificates \
     curl \
     gnupg-agent \
@@ -101,8 +101,13 @@ You can click on them to expand and then there will be fields to enter input thr
 ### End to End and Performance Testing
 
 Navigate to the testing folder. `cd testing`
+  
+To install the needed dependencies you can run 
 
-Here there are folders with images for testing and a script to act as a client that sends all the pictures in a folder with 1 image per request asynchronously.
+```bash
+npm i
+```
+In th there are folders with images for testing and a script to act as a client that sends all the pictures in a folder with 1 image per request asynchronously.
 
 Each directory has a different number of imgs (125, 250, 500, 750, 1000).
 You pass the name of the directory as an argument like so:
