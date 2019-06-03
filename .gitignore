@@ -1,2 +1,6 @@
 testing/node_modules
 testing/node_modules/**/*
+
+SigAuthUI/src/test/node_modules
+SigAuthUI/src/test/node_modules/**/*
+
