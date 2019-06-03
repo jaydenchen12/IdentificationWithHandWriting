@@ -14,6 +14,16 @@ To run the pipeline do the following:
 ```bash
 docker-compose up
 ```
+
+This will put the backend up. To use the front end just open the file
+
+```
+SigAuthUI/src/main/templates/signaturePage.html
+```
+in your browser!.
+
+
+
 ### Installing Project on EC2
 ```bash
 # First we need to chmod 400 out public key
@@ -70,8 +80,40 @@ docker run -d --restart=always -p 80:80 -t my_flask_app
 docker build -t api .
 docker run --rm -it -p 80:5000 api
 
-##Closeing containers
+##Closing containers
 docker-compose down
 --volume (Full teardown)
 ```
 
+### Testing the Backend Endpoints
+
+To test the backend endpoints simply go to [localhost:5000](http://localhost:5000)
+
+Here you will see 4 different endpoints to test 
+    - /Login/create_tenant
+    - /Login/login_tenant
+    - /Signature/check_status
+    - /Signature/verify_signature
+
+You can click on them to expand and then there will be fields to enter input thru. It will make calls to the API and return results.
+
+### End to End and Performance Testing
+    Navigate to the testing folder. `cd testing`
+    
+    Here there are folders with images for testing and a script to act as a client that sends all the pictures in a folder with 1 image per request asynchronously.
+
+    Each directory has a different number of imgs (125, 250, 500, 750, 1000).
+    You pass the name of the directory as an argument like so:
+    ```bash
+    node upload.js img2
+    ```
+
+    The results will print the body returned fromeach requests as well as the number of total requests sent and any failed deliveries.
+
+If you are interested in timing, I used the simple `time` utility from my Unix shell. So my commands looked like this:
+    
+    ```bash
+    time node upload.js img2
+    ```
+
+    

@@ -1,0 +1,9 @@
+125 files -> 3.5s
+
+250 files -> 7.3s
+
+500 files -> 11.8s
+
+750 file -> 23.1s
+
+1000 files -> 28s -> 94 missing
