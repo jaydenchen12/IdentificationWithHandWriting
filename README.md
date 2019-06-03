@@ -87,7 +87,7 @@ docker-compose down
 
 ### Testing the Backend Endpoints
 
-To test the backend endpoints simply go to [localhost:5000](http://localhost:5000)
+To test the backend endpoints simply go to [localhost](http://localhost:)
 
 Here you will see 4 different endpoints to test 
 
