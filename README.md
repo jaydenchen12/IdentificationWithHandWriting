@@ -3,11 +3,11 @@
 Signature verification through handwriting analysis is one of the most common tasks in forensic document analysis. It is very important to compare questioned writing/signatures with the genuine one, when it comes to data protection and identity management. We are utilizing machine learning techniques to perform handwriting analysis by matching images of a questioned handwriting with the genuine ones to authenticate writing/signatures. Machine Learning algorithms will adapt and improve their performance as the number of handwriting samples increase for learning and do more accurate analysis.
 
 Tech Stack:
-Python
-Flask
-Tensorflow
-MongoDB backend
-Objectstore
+- Python
+- Flask
+- Tensorflow
+- MongoDB
+- NodeJs (for testing)
 
 To run the pipeline do the following:
 
@@ -53,7 +53,7 @@ apt-get install git-core
 sudo apt-get update
 
 sudo apt-get install \
-    apt-transport-https \
+    apt-transport-https \#!/Login/post_login
     ca-certificates \
     curl \
     gnupg-agent \
@@ -90,30 +90,37 @@ docker-compose down
 To test the backend endpoints simply go to [localhost:5000](http://localhost:5000)
 
 Here you will see 4 different endpoints to test 
-    - /Login/create_tenant
-    - /Login/login_tenant
-    - /Signature/check_status
-    - /Signature/verify_signature
+
+- /Login/create_tenant
+- /Login/login_tenant
+- /Signature/check_status
+- /Signature/verify_signature
 
 You can click on them to expand and then there will be fields to enter input thru. It will make calls to the API and return results.
 
 ### End to End and Performance Testing
-    Navigate to the testing folder. `cd testing`
-    
-    Here there are folders with images for testing and a script to act as a client that sends all the pictures in a folder with 1 image per request asynchronously.
 
-    Each directory has a different number of imgs (125, 250, 500, 750, 1000).
-    You pass the name of the directory as an argument like so:
-    ```bash
-    node upload.js img2
-    ```
+Navigate to the testing folder. `cd testing`
+  
+To install the needed dependencies you can run 
 
-    The results will print the body returned fromeach requests as well as the number of total requests sent and any failed deliveries.
+```bash
+npm i
+```
+In th there are folders with images for testing and a script to act as a client that sends all the pictures in a folder with 1 image per request asynchronously.
+
+Each directory has a different number of imgs (125, 250, 500, 750, 1000).
+You pass the name of the directory as an argument like so:
+```bash
+node upload.js img2
+```
+
+The results will print the body returned fromeach requests as well as the number of total requests sent and any failed deliveries.
 
 If you are interested in timing, I used the simple `time` utility from my Unix shell. So my commands looked like this:
-    
-    ```bash
-    time node upload.js img2
-    ```
+
+```bash
+time node upload.js img2
+```
 
     
