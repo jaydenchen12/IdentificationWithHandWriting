@@ -6,7 +6,7 @@ gast==0.2.2
 grpcio==1.19.0
 gunicorn==19.9.0
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.11.3
 jsonschema==3.0.1
 Markdown==3.0.1
 MarkupSafe==1.1.1
