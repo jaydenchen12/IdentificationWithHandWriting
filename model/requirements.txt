@@ -12,7 +12,7 @@ pip==18.1
 protobuf==3.7.0  
 pyrsistent==0.14.11
 pytz==2018.9 
-PyYAML==3.13   
+PyYAML==5.4   
 scipy==1.2.1  
 setuptools==40.6.2 
 tensorboard==1.13.1 
