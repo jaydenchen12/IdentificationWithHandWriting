@@ -16,7 +16,7 @@ PyYAML==3.13
 scipy==1.2.1  
 setuptools==40.6.2 
 tensorboard==1.13.1 
-tensorflow==1.13.1 
+tensorflow==2.6.4 
 tensorflow-estimator==1.13.0 
 wheel==0.33.1 
 pymongo==3.5.1
