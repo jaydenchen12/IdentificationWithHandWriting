@@ -14,7 +14,7 @@ pyrsistent==0.14.11
 pytz==2018.9 
 PyYAML==3.13   
 scipy==1.2.1  
-setuptools==40.6.2 
+setuptools==65.5.1 
 tensorboard==1.13.1 
 tensorflow==1.13.1 
 tensorflow-estimator==1.13.0 
